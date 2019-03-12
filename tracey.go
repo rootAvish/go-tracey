@@ -124,12 +124,12 @@ func New(opts *Options) (func(string), func(...interface{}) string) {
 
 		// Figure out the name of the caller and use that
 		fnName := "<unknown>"
-		pc, _, _, ok := runtime.Caller(1)
+		pc, fileNameCaller, lineCaller, ok := runtime.Caller(1)
 		if ok {
 			fnName = RE_stripFnPreamble.ReplaceAllString(runtime.FuncForPC(pc).Name(), "$1")
 		}
 
-		traceMessage := fnName
+		traceMessage := fmt.Sprintf("%s:%d %s", fileNameCaller, lineCaller, fnName)
 		if len(args) > 0 {
 			if fmtStr, ok := args[0].(string); ok {
 				// We have a string leading args, assume its to be formatted
